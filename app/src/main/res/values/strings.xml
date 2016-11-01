@@ -1,3 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ImageProcessing</string>
+
+    <string name="hello">Hello World, ShowPartPictureActivity!</string>
+    <string name="app_name">ShowPartPicture</string>
+
 </resources>

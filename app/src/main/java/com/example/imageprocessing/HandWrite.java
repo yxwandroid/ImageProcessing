@@ -31,7 +31,8 @@ public class HandWrite extends View {
         super(context, attrs);
         //不能把不变的画布传给画图
         Bitmap bitmap =BitmapFactory.decodeResource(getResources(), R.drawable.xiaowu).copy(Bitmap.Config.ARGB_8888,true);
-        originalBitmap =ImageUtils.cropCenter(bitmap, 200, 200);
+        originalBitmap = ImageUtils.getRoundCornerImage(bitmap, 50);
+       // originalBitmap =ImageUtils.cropCenter(roundCornerImage, 200, 200);
         new1Bitmap = Bitmap.createBitmap(originalBitmap);
     }
 
