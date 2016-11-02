@@ -17,8 +17,8 @@ public class MainActivity extends Activity {
     {
         super.onCreate(savedInstanceState);
 
-//        setContentView(new CustomView(this));
-        setContentView(R.layout.main);
+        setContentView(new CustomView(this));
+//        setContentView(R.layout.main);
 
 
 

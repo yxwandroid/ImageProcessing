@@ -3,6 +3,7 @@ package com.example.imageprocessing;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -24,41 +25,32 @@ public class ImageUtils {
      * @param height 剪切的高
      * @return
      */
-    public static  Bitmap cropCenter(Bitmap bitmap, int width, int height) {
+    public static Bitmap cropCenter(Bitmap bitmap, int width, int height) {
         int startWidth = (bitmap.getWidth() - width) / 2;
         int startHeight = (bitmap.getHeight() - height) / 2;
-
         Rect rect = new Rect(startWidth, startHeight, startWidth + width, startHeight + height);
-        return dividePart(bitmap,rect);
-    }
 
+        int width1 = rect.width();
+        int height1 = rect.height();
 
-    /**
-     * 获得截取之后的图片
-     * @param bitmap  原始图片
-     * @param rect  截取的矩阵
-     * @return
-     */
-    private static Bitmap dividePart(Bitmap bitmap, Rect rect) {
-        int width = rect.width();
-        int height = rect.height();
-        Rect rect1=new Rect(0,0,width,height);
-        Bitmap bitmap1=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);
-        Canvas canvas=new Canvas(bitmap1);
-        canvas.drawBitmap(bitmap,rect,rect1,null);
-        return bitmap;
+        Rect rect1 = new Rect(0, 0, width1, height1);
+        Bitmap bitmap1 = Bitmap.createBitmap(width1, height1, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap1);
+        canvas.drawBitmap(bitmap, rect, rect1, null);
+        return bitmap1;
+
 
     }
 
 
     /**
      * 获得圆角矩形
+     *
      * @param bitmap
      * @param roundPixels
      * @return
      */
-    public static Bitmap getRoundCornerImage(Bitmap bitmap, int roundPixels)
-    {
+    public static Bitmap getRoundCornerImage(Bitmap bitmap, int roundPixels) {
         //创建一个和原始图片一样大小位图
         Bitmap roundConcerImage = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         //创建带有位图roundConcerImage的画布
@@ -74,14 +66,101 @@ public class ImageUtils {
         //画一个和原始图片一样大小的圆角矩形
         canvas.drawRoundRect(rectF, roundPixels, roundPixels, paint);
         //设置相交模式
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
         //把图片画到矩形去
         canvas.drawBitmap(bitmap, null, rect, paint);
         return roundConcerImage;
     }
 
-    public static Bitmap getRoundCornerImage2(Bitmap bitmap, int roundPixels)
-    {
-        return bitmap;
+
+    /**
+     * 对图片进行缩放
+     *
+     * @param bitmap
+     * @param w
+     * @param h
+     * @return
+     */
+    public static Bitmap resizeBitmap(Bitmap bitmap, int w, int h) {
+        if (bitmap != null) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int newWidth = w;
+            int newHeight = h;
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+            Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+            return resizedBitmap;
+        } else {
+            return null;
+        }
     }
+
+
+    public static Bitmap rotateBotmap(Bitmap bitmap, int rotate) {
+        Bitmap bitmap1 = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        Canvas canvas = new Canvas(bitmap1);
+        Matrix matrix = new Matrix();
+        matrix.setRotate(rotate, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+        Paint paint = new Paint();
+        paint.setColor(Color.GREEN);
+        canvas.drawBitmap(bitmap, matrix, paint);
+        return  bitmap1;
+    }
+
+
+    /**
+     * 研究save的使用
+     *
+     * @param canvas
+     */
+    private void drawSave(Canvas canvas, Paint paint) {
+
+        canvas.translate(100, 100); // 平移（100,100）
+        canvas.drawRect(0, 0, 200, 200, paint); // 以原
+        int save1 = canvas.save(); // 保存Canvas状态（状态1）
+        canvas.scale(2, 2); // 放大2倍
+        canvas.translate(100, 100); // 平移（100,100）
+        canvas.drawRect(0, 0, 200, 200, paint); // 以原
+        int save2 = canvas.save(); // 保存Canvas状态（状态2）
+
+        canvas.scale(2, 2); // 放大2倍
+        canvas.translate(100, 100); // 平移（100,100）
+        canvas.drawRect(0, 0, 200, 200, paint); // 以原
+        int save3 = canvas.save();
+
+        canvas.restoreToCount(save3);
+
+        canvas.translate(-200, 200);
+        canvas.drawRect(0, 0, 200, 200, paint); // 以原
+        canvas.restoreToCount(save2);
+        // 手动指定的返回到 状态1
+    }
+
+    /**
+     * 验证坐标
+     *
+     * @param canvas
+     */
+    private void drawXy(Canvas canvas, Paint paint) {
+
+
+        paint.setColor(Color.argb(50, 255, 100, 100));
+        canvas.drawRect(0, 0, 200, 200, paint); // 以原始Canvas画出一个矩形1
+        canvas.translate(300, 300); // 将Canvas平移 (100,100)
+        paint.setColor(Color.argb(50, 100, 255, 100));
+        canvas.drawRect(0, 0, 200, 200, paint); // 矩形2
+
+        canvas.rotate(30); //将Canvas旋转30
+        paint.setColor(Color.argb(50, 100, 0, 255));
+        canvas.drawRect(0, 0, 200, 200, paint); // 矩形3
+
+        canvas.scale(2, 2); // 将Canvas以原点为中心，放大两倍
+        paint.setColor(Color.argb(50, 255, 255, 0));
+        canvas.drawRect(0, 0, 200, 200, paint); // 矩形4
+
+    }
+
 }
