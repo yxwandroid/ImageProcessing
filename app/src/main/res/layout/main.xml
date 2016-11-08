@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:moving="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello" />
 
-    <myview.MovingView
+    <ImageView
         android:id="@+id/imageview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        moving:extraspace="30dp"
-        moving:handlebackground="@drawable/updownsel"
-        moving:movingbackground="@drawable/bofucur" />
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
 
 </LinearLayout>

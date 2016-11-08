@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -35,8 +36,10 @@ public class ImageUtils {
 
         Rect rect1 = new Rect(0, 0, width1, height1);
         Bitmap bitmap1 = Bitmap.createBitmap(width1, height1, Bitmap.Config.ARGB_8888);
+
         Canvas canvas = new Canvas(bitmap1);
         canvas.drawBitmap(bitmap, rect, rect1, null);
+
         return bitmap1;
 
 
@@ -64,11 +67,19 @@ public class ImageUtils {
         paint.setAntiAlias(true);
         paint.setColor(Color.RED);
         //画一个和原始图片一样大小的圆角矩形
-        canvas.drawRoundRect(rectF, roundPixels, roundPixels, paint);
+        Path path = new Path();
+        path.moveTo(0, bitmap.getHeight());// 此点为多边形的起点
+        path.lineTo(bitmap.getHeight(), bitmap.getWidth());
+        path.lineTo(bitmap.getWidth(), 0);
+        path.close(); // 使这些点构成封闭的多边形
+        canvas.drawPath(path, paint);
+
+
+//        canvas.drawRoundRect(rectF, roundPixels, roundPixels, paint);
         //设置相交模式
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         //把图片画到矩形去
-        canvas.drawBitmap(bitmap, null, rect, paint);
+        canvas.drawBitmap(bitmap, rect, rect, paint);
         return roundConcerImage;
     }
 

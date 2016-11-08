@@ -8,37 +8,29 @@ import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     private HandWrite handWrite = null;
     private ImageView imageView;
     private Button clear = null;
+
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyView myView = new MyView(this);
+        setContentView(myView);
 
-        setContentView(new CustomView(this));
-//        setContentView(R.layout.main);
-
-
-
-
-
-//        handWrite = (HandWrite)findViewById(R.id.handwriteview);
 //        imageView = (ImageView)findViewById(R.id.imageview);
-//        clear = (Button)findViewById(R.id.clear);
-//        clear.setOnClickListener(new clearListener());
-//
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.xiaowu);
-//        Bitmap roundCornerImage = ImageUtils.getRoundCornerImage(bitmap, 50);
+//        Bitmap roundCornerImage = ImageUtils.getRoundCornerImage(bitmap, 300000);
 //        imageView.setImageBitmap(roundCornerImage);
     }
 
 
     private class clearListener implements View.OnClickListener {
 
-        public void onClick(View v)
-        {
+        public void onClick(View v) {
             handWrite.clear();
         }
     }
